@@ -1,0 +1,15 @@
+C:\dev\pushpay\innovation\charles\Advent2021\Day7\bin\Debug\net6.0\Day7.exe
+C:\dev\pushpay\innovation\charles\Advent2021\Day7\bin\Debug\net6.0\Day7.deps.json
+C:\dev\pushpay\innovation\charles\Advent2021\Day7\bin\Debug\net6.0\Day7.runtimeconfig.json
+C:\dev\pushpay\innovation\charles\Advent2021\Day7\bin\Debug\net6.0\Day7.dll
+C:\dev\pushpay\innovation\charles\Advent2021\Day7\bin\Debug\net6.0\ref\Day7.dll
+C:\dev\pushpay\innovation\charles\Advent2021\Day7\bin\Debug\net6.0\Day7.pdb
+C:\dev\pushpay\innovation\charles\Advent2021\Day7\obj\Debug\net6.0\Day7.csproj.AssemblyReference.cache
+C:\dev\pushpay\innovation\charles\Advent2021\Day7\obj\Debug\net6.0\Day7.GeneratedMSBuildEditorConfig.editorconfig
+C:\dev\pushpay\innovation\charles\Advent2021\Day7\obj\Debug\net6.0\Day7.AssemblyInfoInputs.cache
+C:\dev\pushpay\innovation\charles\Advent2021\Day7\obj\Debug\net6.0\Day7.AssemblyInfo.cs
+C:\dev\pushpay\innovation\charles\Advent2021\Day7\obj\Debug\net6.0\Day7.csproj.CoreCompileInputs.cache
+C:\dev\pushpay\innovation\charles\Advent2021\Day7\obj\Debug\net6.0\Day7.dll
+C:\dev\pushpay\innovation\charles\Advent2021\Day7\obj\Debug\net6.0\ref\Day7.dll
+C:\dev\pushpay\innovation\charles\Advent2021\Day7\obj\Debug\net6.0\Day7.pdb
+C:\dev\pushpay\innovation\charles\Advent2021\Day7\obj\Debug\net6.0\Day7.genruntimeconfig.cache
