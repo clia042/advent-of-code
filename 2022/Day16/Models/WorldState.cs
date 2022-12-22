@@ -14,6 +14,7 @@ namespace Day16.Models
         public HashSet<string> VisitedValves { get; set; }
         public Valve CurrentValve { get; set; }
         public Dictionary<string, Valve> Map { get; set; }
+        public List<PathScore> PathScores { get; set; }
 
         public WorldState CopyState()
         {
@@ -23,7 +24,8 @@ namespace Day16.Models
                 PressureReleased = PressureReleased,
                 Pressure = Pressure,
                 VisitedValves = new(VisitedValves),
-                Map = Map
+                Map = Map,
+                PathScores = PathScores
             };
         }
     }
