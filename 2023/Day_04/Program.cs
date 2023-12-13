@@ -10,7 +10,25 @@ foreach (var line in file)
 }
 
 Console.WriteLine("Hello, World!");
-Console.WriteLine(cardCollection.Sum(x => x.Points()));
+
+foreach (var card in cardCollection)
+{
+    var matches = card.MatchingNumbers;
+
+    if (matches == 0)
+    {
+        continue;
+    }
+
+    for (var i = matches; i > 0; i--)
+    {
+        var cardNo = card.CardNumber + i;
+        var nextCard = cardCollection.First(x => x.CardNumber == cardNo);
+        nextCard.AddCopies(card.Count);
+    }
+}
+
+Console.WriteLine(cardCollection.Sum(x => x.Count));
 
 public class Card
 {
@@ -22,11 +40,14 @@ public class Card
             .ToList();
         WinningNumbers = segments[1].Split('|')[1].Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse)
             .ToList();
+        Count = 1;
     }
 
     public int CardNumber { get; set; }
     public List<int> Numbers { get; set; }
     public List<int> WinningNumbers { get; set; }
+    
+    public int Count { get; set; }
 
     public int Points()
     {
@@ -44,5 +65,12 @@ public class Card
         }
 
         return points;
+    }
+
+    public int MatchingNumbers => Numbers.Intersect(WinningNumbers).Count();
+
+    public void AddCopies(int copies)
+    {
+        Count = Count + copies;
     }
 }
