@@ -11,6 +11,7 @@ foreach (var line in file)
     var segment = line.Split(':');
     var raceLines = segment[1]
         .Trim()
+        .Replace(" " ,"")
         .Split(' ', StringSplitOptions.RemoveEmptyEntries);
     switch (segment[0])
     {
@@ -18,23 +19,23 @@ foreach (var line in file)
             races = raceLines
                 .Select(x => new RaceState()
                 {
-                    Time = int.Parse(x)
+                    Time = long.Parse(x)
                 })
                 .ToList();
             break;
         case "Distance":
             for (var i = 0; i< raceLines.Length; i++)
             {
-                races[i].Distance = int.Parse(raceLines[i]);
+                races[i].Distance = long.Parse(raceLines[i]);
             }
             break;
     }
 }
 
-var winningOptions = new List<int>();
+var winningOptions = new List<long>();
 foreach (var race in races)
 {
-    var results = new List<int>();
+    var results = new List<long>();
     for (var h = 0; h < race.Time; h++)
     {
         results.Add(race.GetDistanceFromHoldTime(h));
@@ -47,8 +48,8 @@ Console.WriteLine("Hello, World!");
 
 public class RaceState
 {
-    public int Time { get; set; }
-    public int Distance { get; set; }
+    public long Time { get; set; }
+    public long Distance { get; set; }
 
-    public int GetDistanceFromHoldTime(int holdTime) => (Time - holdTime) * holdTime;
+    public long GetDistanceFromHoldTime(int holdTime) => (Time - holdTime) * holdTime;
 }
