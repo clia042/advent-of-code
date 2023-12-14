@@ -1,5 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
+
 using System.Text;
+using System.Text.RegularExpressions;
 
 var useSample = false;
 var file = File.ReadAllLines(useSample ? "sample_input.txt" : "input.txt");
@@ -30,6 +32,8 @@ File.WriteAllText(@"C:\Dev\clia042\advent-of-code\2023\Day_07\output.txt", strin
 Console.WriteLine(sortedHands.Sum(x => x.Winnings));
 Console.WriteLine("Hello, World!");
 //250045319 too low :(
+//250531671 too high
+//250506580
 
 public class HandState : IComparable
 {
@@ -41,7 +45,28 @@ public class HandState : IComparable
     public HandType GetHandType()
     {
         var uniques = Hand.GroupBy(c => c, c => c);
+        var standardType = GetStandardHandType(uniques);
+        var jokers = uniques.FirstOrDefault(c => c.Key == 'J')?.Count() ?? 0;
 
+        return (jokers, standardType) switch
+        {
+            (4, HandType.FourOfAKind) => HandType.FiveOfAKind,
+            (3, HandType.FullHouse) => HandType.FiveOfAKind,
+            (3, HandType.ThreeOfAKind) => HandType.FourOfAKind,
+            (2, HandType.FullHouse) => HandType.FiveOfAKind,
+            (2, HandType.TwoPair) => HandType.FourOfAKind,
+            (2, HandType.OnePair) => HandType.ThreeOfAKind,
+            (1, HandType.FourOfAKind) => HandType.FiveOfAKind,
+            (1, HandType.ThreeOfAKind) => HandType.FourOfAKind,
+            (1, HandType.TwoPair) => HandType.FullHouse,
+            (1, HandType.OnePair) => HandType.ThreeOfAKind,
+            (1, HandType.HighCard) => HandType.OnePair,
+            _ => standardType
+        };
+    }
+
+    HandType GetStandardHandType(IEnumerable<IGrouping<char, char>>? uniques)
+    {
         if (uniques.Count() == 1)
         {
             return HandType.FiveOfAKind;
@@ -77,6 +102,7 @@ public class HandState : IComparable
     {
         var cardStrength = new Dictionary<char, int>()
         {
+            { 'J', 1 },
             { '2', 2 },
             { '3', 3 },
             { '4', 4 },
@@ -86,7 +112,6 @@ public class HandState : IComparable
             { '8', 8 },
             { '9', 9 },
             { 'T', 10 },
-            { 'J', 11 },
             { 'Q', 12 },
             { 'K', 13 },
             { 'A', 14 }
@@ -103,7 +128,7 @@ public class HandState : IComparable
         {
             return currentHandStrength < otherHandStrength ? -1 : 1;
         }
-        
+
         for (var i = 0; i < 5; i++)
         {
             var currentCardStrength = cardStrength[Hand[i]];
