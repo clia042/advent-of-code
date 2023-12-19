@@ -8,9 +8,12 @@ var results = new List<int>();
 foreach (var line in file)
 {
     var matrix = ParseLineToMatrix(line);
-    var nextSequence = GetNextSequence(matrix);
-    results.Add(nextSequence);
-    Console.WriteLine($"{line} => {nextSequence}");
+    //var nextSequence = GetNextSequence(matrix);
+    //results.Add(nextSequence);
+    //Console.WriteLine($"{line} => {nextSequence}");
+    var previousSequence = GetPreviousSequence(matrix);
+    results.Add(previousSequence);
+    Console.WriteLine($"{previousSequence} <= {line}");
 }
 
 Console.WriteLine($"sum: {results.Sum()}");
@@ -62,4 +65,18 @@ int GetNextSequence(List<List<int>> matrix)
     }
 
     return matrix[0].Last();
+}
+
+int GetPreviousSequence(List<List<int>> matrix)
+{
+    var depth = matrix.Count - 1;
+    while (depth > 0)
+    {
+        var lineValue = matrix[depth].First();
+        var currentValue = matrix[depth - 1].First();
+        matrix[depth - 1].Insert(0,currentValue - lineValue);
+        depth--;
+    }
+
+    return matrix[0].First();
 }
