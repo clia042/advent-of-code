@@ -3,10 +3,11 @@
 using System.Text;
 
 var useSample = false;
-var file = File.ReadAllLines(useSample ? "sample_input_b.txt" : "input.txt");
+var file = File.ReadAllLines(useSample ? "sample_input_d.txt" : "input.txt");
 
 var start = (x: -1, y: -1);
 var map = BuildMatrix(file);
+var originalMap = BuildMatrix(file);
 
 var cursors = GetPaths(start, map);
 
@@ -28,17 +29,76 @@ while (cursors.Any())
     cursors = newCursor;
 }
 
+var numberOfInsideTiles = CalculateInsideTiles(map, originalMap);
+
 PrintMap(map);
 
-Console.WriteLine($"Hello, World! {i - 1}");
+Console.WriteLine($"Hello, World! part 1:{i - 1}, part 2: {numberOfInsideTiles}");
+//2394; too high
 return;
+
+int CalculateInsideTiles(string[,] matrix, string[,] ogMatrix)
+{
+    var count = 0;
+    var inside = false;
+    var junctions = "";
+
+    for (var y = 0; y < matrix.GetLength(1); y++)
+    {
+        for (int x = 0; x < matrix.GetLength(0); x++)
+        {
+            if (matrix[x, y] == "*")
+            {
+                switch (ogMatrix[x, y])
+                {
+                    case "|":
+                    case "S":
+                        inside = !inside; //flip
+                        break;
+                    case "F":
+                    case "L":
+                        //start junction
+                        junctions = ogMatrix[x, y];
+                        break;
+                    case "-": // on a pipe
+                        break;
+                    case "J":
+                    case "7":
+                        //end junction
+                        junctions += ogMatrix[x, y];
+                        inside = junctions switch
+                        {
+                            "F7" => inside,
+                            "FJ" => !inside,
+                            "L7" => !inside,
+                            "LJ" => inside
+                        };
+                        break;
+                }
+            }
+            else if (inside)
+            {
+                matrix[x, y] = "0";
+                count++;
+            }
+            else
+            {
+                matrix[x, y] = "X";
+            }
+        }
+
+        //if (inside) throw new Exception();
+    }
+
+    return count;
+}
 
 void PrintMap(string[,] matrix)
 {
     var builder = new StringBuilder();
-    for (var y = 0; y < matrix.GetLength(0); y++)
+    for (var y = 0; y < matrix.GetLength(1); y++)
     {
-        for (int x = 0; x < matrix.GetLength(1); x++)
+        for (int x = 0; x < matrix.GetLength(0); x++)
         {
             builder.Append(matrix[x, y]);
         }
