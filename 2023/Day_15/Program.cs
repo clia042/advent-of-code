@@ -5,18 +5,78 @@ using System.Text;
 var useSample = false;
 var file = File.ReadAllLines(useSample ? "sample_input.txt" : "input.txt");
 
-// Console.WriteLine(ASCIIStringHelper("HASH"));
+var _separators = new[] { '=', '-' };
+var boxes = new Dictionary<int, List<Lense>>();
 
-var list = new List<(string, int)>();
-
-foreach (var sequence in file.First().Split(","))
+foreach (var instruction in file.First().Split(","))
 {
-    var num = HASHAlgorithm(sequence);
-    list.Add(new ValueTuple<string, int>(sequence, num));
-    //Console.WriteLine($"{sequence} : {num}");
+    var label = new string(instruction.TakeWhile(c => _separators.Contains(c) == false).ToArray());
+    var boxNumber = HASHAlgorithm(label);
+    var IsAddLense = instruction.Contains('=');
+
+    if (IsAddLense)
+    {
+        var lense = new Lense(label, int.Parse($"{instruction.Last()}"));
+        AddOrReplaceLense(boxNumber, lense);
+    }
+    else
+    {
+        RemoveLense(boxNumber, label);
+    }
 }
 
-Console.WriteLine($"Hello, World! {list.Sum(x => x.Item2)}");
+var powers = new List<int>();
+
+foreach (var box in boxes)
+{
+    //Console.WriteLine($"Box {box.Key}: {string.Join(" ", box.Value.Select(x => $"[{x.Label} {x.Power}]"))}");
+    var boxWeight = box.Key + 1;
+    for (var i = 0; i < box.Value.Count(); i++)
+    {
+        var slotWeight = i + 1;
+        var focalLength = box.Value[i].Power;
+        powers.Add(boxWeight * slotWeight * focalLength);
+    }
+}
+
+Console.WriteLine($"Hello, World! {powers.Sum()}");
+
+void AddOrReplaceLense(int boxNumber, Lense lense)
+{
+    var boxList = boxes.GetValueOrDefault(boxNumber) ?? new List<Lense>();
+
+    var existingLense = boxList.FindIndex(l => l.Label == lense.Label);
+    if (existingLense != -1)
+    {
+        boxList.RemoveAt(existingLense);
+        boxList.Insert(existingLense, lense);
+    }
+    else
+    {
+        boxList.Add(lense);
+    }
+
+    boxes[boxNumber] = boxList;
+}
+
+void RemoveLense(int boxNumber, string label)
+{
+    var boxList = boxes.GetValueOrDefault(boxNumber);
+    if (boxList == null)
+    {
+        return;
+    }
+
+    boxList.RemoveAll(l => l.Label == label);
+    if (boxList.Any())
+    {
+        boxes[boxNumber] = boxList;
+    }
+    else
+    {
+        boxes.Remove(boxNumber);
+    }
+}
 
 int HASHAlgorithm(string input)
 {
@@ -30,4 +90,16 @@ int HASHAlgorithm(string input)
     }
 
     return currentValue;
+}
+
+class Lense
+{
+    public Lense(string label, int power)
+    {
+        Label = label;
+        Power = power;
+    }
+
+    public string Label { get; set; }
+    public int Power { get; set; }
 }
